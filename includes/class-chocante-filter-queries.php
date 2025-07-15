@@ -175,16 +175,16 @@ class Chocante_Filter_Queries {
 				Chocante_Product_Filters::PARAM_VISIBILITY => $filters[ Chocante_Product_Filters::PARAM_VISIBILITY ],
 			);
 
-			$query = "SELECT 
-					t.term_id, 
-					t.slug, 
-					t.name, 
-					tx.taxonomy 
-				FROM 
+			$query = "SELECT
+					t.term_id,
+					t.slug,
+					t.name,
+					tx.taxonomy
+				FROM
 					{$this->filters_main_query($tax_id)}
 					JOIN {$this->wpdb->prefix}terms t ON tx.term_id = t.term_id
-					JOIN {$this->wpdb->prefix}termmeta tm ON tm.term_id = t.term_id
-						AND tm.meta_key = 'order' 
+					LEFT JOIN {$this->wpdb->prefix}termmeta tm ON tm.term_id = t.term_id
+						AND tm.meta_key = 'order'
 				WHERE 1=1
 					{$this->filter_query($visibility)}
 					{$this->where_product_query()}
@@ -196,7 +196,7 @@ class Chocante_Filter_Queries {
 					tm.meta_value
 				ORDER BY
 					tx.taxonomy,
-					ABS(tm.meta_value),
+					ABS(COALESCE(tm.meta_value, 0)),
 					t.slug";
 
 			$results = $this->wpdb->get_results( $query ); // @codingStandardsIgnoreLine.
@@ -349,6 +349,7 @@ class Chocante_Filter_Queries {
 		}
 
 		$all_filters = $this->query_all_filters( $filters, $tax_id );
+
 		// $active_filters = wp_list_pluck( $this->query_active_filters( $filters, $filter_on_sale, $tax_id ), 'count', 'term_id' );
 
 		// Children of currently displayed taxonomy.

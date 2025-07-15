@@ -53,7 +53,7 @@ class Chocante_Product_Filters {
 	const DEFAULT_ORDERBY   = 'menu_order';
 	const PARAM_CATEGORY    = 'product_cat';
 	const SEARCH_PARAM      = 's';
-	const SUPPORTED_FILTERS = array( 'product_cat', 'pa_smak', 'pa_gatunek-kakao' );
+	const SUPPORTED_FILTERS = array( 'product_cat', 'pa_smak', 'pa_gatunek-kakao', 'product_tag' );
 	const PARAM_VISIBILITY  = 'product_visibility';
 
 	/**
@@ -155,15 +155,25 @@ class Chocante_Product_Filters {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$category_filter = isset( $_GET['filter_product_cat'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_GET['filter_product_cat'] ) ) ) : null;
 
-		if ( ! isset( $category_filter ) ) {
-			return $tax_query;
+		if ( isset( $category_filter ) ) {
+			$tax_query[] = array(
+				'taxonomy' => self::PARAM_CATEGORY,
+				'field'    => 'slug',
+				'terms'    => $category_filter,
+			);
 		}
 
-		$tax_query[] = array(
-			'taxonomy' => self::PARAM_CATEGORY,
-			'field'    => 'slug',
-			'terms'    => $category_filter,
-		);
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$tag_filter = isset( $_GET['filter_product_tag'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_GET['filter_product_tag'] ) ) ) : null;
+
+		if ( isset( $tag_filter ) ) {
+			$tax_query[] = array(
+				'taxonomy' => 'product_tag',
+				'field'    => 'slug',
+				'terms'    => $tag_filter,
+			);
+		}
 
 		return $tax_query;
 	}
