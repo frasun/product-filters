@@ -323,10 +323,10 @@ class Chocante_Filter_Queries {
 	 * @return array
 	 */
 	public function get_filters( $filters = array(), $current_tax = null ) {
-		$filter_on_sale = isset( $filters[ Chocante_Product_Filters::PARAM_SALE ] );
-		$tax_id         = isset( $current_tax ) ? $current_tax->term_id : null;
-		$results        = array();
-		$has_sales      = $this->query_has_sale( $filters, $tax_id );
+		// $filter_on_sale = isset( $filters[ Chocante_Product_Filters::PARAM_SALE ] );
+		$tax_id    = isset( $current_tax ) ? $current_tax->term_id : null;
+		$results   = array();
+		$has_sales = $this->query_has_sale( $filters, $tax_id );
 
 		if ( $has_sales ) {
 			$results[ Chocante_Product_Filters::PARAM_SALE ] = array(
