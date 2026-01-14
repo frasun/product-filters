@@ -5,8 +5,6 @@
  * @package Chocante_Product_Filters
  */
 
-use WPML\Collect\Support\Arr;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -48,13 +46,15 @@ class Chocante_Product_Filters {
 	 */
 	private $current_taxonomy;
 
-	const PARAM_SALE        = 'on_sale';
-	const PARAM_ORDERBY     = 'orderby';
-	const DEFAULT_ORDERBY   = 'menu_order';
-	const PARAM_CATEGORY    = 'product_cat';
-	const SEARCH_PARAM      = 's';
-	const SUPPORTED_FILTERS = array( 'product_cat', 'pa_smak', 'pa_gatunek-kakao', 'product_tag' );
-	const PARAM_VISIBILITY  = 'product_visibility';
+	const PARAM_SALE       = 'on_sale';
+	const PARAM_ORDERBY    = 'orderby';
+	const DEFAULT_ORDERBY  = 'menu_order';
+	const PARAM_CATEGORY   = 'product_cat';
+	const PARAM_TAG        = 'product_tag';
+	const PARAM_VISIBILITY = 'product_visibility';
+	const SEARCH_PARAM     = 's';
+	const EXCLUDED_FILTERS = 'chocante_product_filters_excluded_taxonomies';
+	const EXCLUDED_TERMS   = 'chocante_product_filters_excluded_terms';
 
 	/**
 	 * Constructor
@@ -68,8 +68,26 @@ class Chocante_Product_Filters {
 			$this->version = '1.0.0';
 		}
 
+		$wc_taxonomies      = wc_get_attribute_taxonomies();
+		$excluded_filters   = get_option( self::EXCLUDED_FILTERS, array() );
+		$excluded_terms     = get_option( self::EXCLUDED_TERMS, array() );
+		$user_filters       = array();
+		$product_attributes = array( self::PARAM_CATEGORY, self::PARAM_TAG );
+
+		foreach ( $wc_taxonomies as $tax ) {
+			$attribute            = wc_attribute_taxonomy_name( $tax->attribute_name );
+			$product_attributes[] = $attribute;
+
+			if ( ! in_array( $attribute, $excluded_filters, true ) ) {
+				$user_filters[] = $attribute;
+			}
+		}
+
 		require_once plugin_dir_path( __FILE__ ) . 'class-chocante-filter-queries.php';
-		$this->data = new Chocante_Filter_Queries( $wpdb, self::SUPPORTED_FILTERS );
+		$this->data = new Chocante_Filter_Queries( $wpdb, array( self::PARAM_CATEGORY, ...$user_filters, self::PARAM_TAG ) );
+
+		require_once plugin_dir_path( __FILE__ ) . 'class-chocante-product-filters-admin.php';
+		Chocante_Product_Filters_Admin::init( $product_attributes, $excluded_filters, $excluded_terms );
 
 		$this->init();
 	}
@@ -235,8 +253,9 @@ class Chocante_Product_Filters {
 			return;
 		}
 
-		$query_params = $this->query_params;
-		$filters      = $this->data->get_filters( $this->query_params, $this->current_taxonomy );
+		$query_params   = $this->query_params;
+		$excluded_terms = get_option( self::EXCLUDED_TERMS, array() );
+		$filters        = $this->data->get_filters( $this->query_params, $this->current_taxonomy, $excluded_terms );
 
 		include plugin_dir_path( __FILE__ ) . 'product-filters.php';
 	}

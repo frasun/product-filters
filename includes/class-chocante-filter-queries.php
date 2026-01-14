@@ -320,9 +320,10 @@ class Chocante_Filter_Queries {
 	 *
 	 * @param array        $filters Array of taxonomy IDs.
 	 * @param WP_Term|null $current_tax Queried taxonomy ID.
+	 * @param array        $excluded_terms Array of term IDs excluded by admin.
 	 * @return array
 	 */
-	public function get_filters( $filters = array(), $current_tax = null ) {
+	public function get_filters( $filters = array(), $current_tax = null, $excluded_terms = array() ) {
 		// $filter_on_sale = isset( $filters[ Chocante_Product_Filters::PARAM_SALE ] );
 		$tax_id    = isset( $current_tax ) ? $current_tax->term_id : null;
 		$results   = array();
@@ -370,6 +371,11 @@ class Chocante_Filter_Queries {
 					if ( $filter->taxonomy === $current_tax->taxonomy && ! in_array( $filter->term_id, $current_taxonomy_children, true ) ) {
 						continue;
 					}
+				}
+
+				// Skip filters that are excluded by admin.
+				if ( in_array( (int) $filter->term_id, $excluded_terms, true ) ) {
+					continue;
 				}
 
 				// $filter->count = isset( $active_filters[ $filter->term_id ] ) ? $active_filters[ $filter->term_id ] : 0;

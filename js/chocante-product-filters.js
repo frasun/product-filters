@@ -26,7 +26,10 @@ class ChocanteProductFilters {
 	}
 
 	resetFilters(event) {
-		window.location.href = event.target.action;
+		const url = new URL(event.target.action);
+		url.searchParams.append('reset', 'true');
+
+		window.location.href = url;
 	}
 }
 

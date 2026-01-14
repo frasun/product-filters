@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Product Filters
  * Description: Filter product listings.
- * Version: 1.0.2
+ * Version: 2.0.0
  * Author: Chocante
  * Text Domain: chocante-product-filters
  * Domain Path: /languages
@@ -23,7 +23,7 @@ if ( ! defined( 'MAIN_PLUGIN_FILE' ) ) {
 /**
  * Current plugin version.
  */
-define( 'CHOCANTE_PRODUCT_FILTERS_VERSION', '1.0.2' );
+define( 'CHOCANTE_PRODUCT_FILTERS_VERSION', '2.0.0' );
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-chocante-product-filters.php';
 add_action( 'plugins_loaded', 'chocante_product_filters_init', 10 );
