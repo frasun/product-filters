@@ -3,7 +3,7 @@
 		"wp-scripts": "^0.0.1-security"
 	},
 	"name": "chocante-product-filters",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"main": "",
 	"scripts": {
 		"start": "wp-scripts start",

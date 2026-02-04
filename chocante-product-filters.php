@@ -56,17 +56,3 @@ function chocante_product_filters_missing_wc_notice() {
 	/* translators: %s WC download URL link. */
 	echo '<div class="error"><p><strong>' . sprintf( esc_html__( 'Product Fitlers requires WooCommerce to be installed and active. You can download %s here.', 'chocante-product-filters' ), '<a href="https://woo.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
 }
-
-/**
- * Public function to output filters
- */
-function chocante_product_filters() {
-	Chocante_Product_Filters::instance()->display_filters();
-}
-
-/**
- * Public function to check if any filter is set
- */
-function chocante_has_product_filters() {
-	return Chocante_Product_Filters::instance()->has_filters();
-}

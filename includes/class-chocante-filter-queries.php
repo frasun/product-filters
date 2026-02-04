@@ -383,7 +383,12 @@ class Chocante_Filter_Queries {
 			}
 		}
 
-		return $results;
+		return array_filter(
+			$results,
+			function ( $result ) {
+				return ! isset( $result['items'] ) || ! empty( $result['items'] );
+			}
+		);
 	}
 
 	/**

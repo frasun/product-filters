@@ -46,6 +46,13 @@ class Chocante_Product_Filters {
 	 */
 	private $current_taxonomy;
 
+	/**
+	 * Array of available filters for a given view.
+	 *
+	 * @var array Array of filters.
+	 */
+	private $filters = array();
+
 	const PARAM_SALE       = 'on_sale';
 	const PARAM_ORDERBY    = 'orderby';
 	const DEFAULT_ORDERBY  = 'menu_order';
@@ -257,7 +264,10 @@ class Chocante_Product_Filters {
 		$excluded_terms = get_option( self::EXCLUDED_TERMS, array() );
 		$filters        = $this->data->get_filters( $this->query_params, $this->current_taxonomy, $excluded_terms );
 
-		include plugin_dir_path( __FILE__ ) . 'product-filters.php';
+		if ( ! empty( $filters ) ) {
+			$this->filters = $filters;
+			include plugin_dir_path( __FILE__ ) . 'product-filters.php';
+		}
 	}
 
 	/**
@@ -294,5 +304,39 @@ class Chocante_Product_Filters {
 	 */
 	public function has_filters() {
 		return isset( $this->query_params ) && count( $this->query_params ) > 1;
+	}
+
+	/**
+	 * Whether any filter is set
+	 */
+	public function has_available_filters() {
+		return ! empty( $this->filters );
+	}
+
+	/**
+	 * Number of active filters
+	 */
+	public function get_active_filters() {
+		$query_params = $this->query_params;
+
+		return array_reduce(
+			array_keys( $query_params ),
+			function ( $carry, $key ) use ( $query_params ) {
+				if ( self::PARAM_VISIBILITY === $key ) {
+					return $carry;
+				}
+
+				if ( self::PARAM_SALE === $key ) {
+					return $carry + 1;
+				}
+
+				if ( is_array( $query_params[ $key ] ) ) {
+					return $carry + count( $query_params[ $key ] );
+				}
+
+				return $carry;
+			},
+			0
+		);
 	}
 }
