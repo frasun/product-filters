@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Product Filters
  * Description: Filter product listings.
- * Version: 2.0.0
+ * Version: 2.1.1
  * Author: Chocante
  * Text Domain: chocante-product-filters
  * Domain Path: /languages
@@ -33,6 +33,10 @@ add_action( 'plugins_loaded', 'chocante_product_filters_init', 10 );
  */
 function chocante_product_filters_init() {
 	load_plugin_textdomain( 'chocante-product-filters', false, plugin_basename( __DIR__ ) . '/languages' );
+
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return;
+	}
 
 	Chocante_Product_Filters::instance();
 }
