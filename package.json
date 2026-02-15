@@ -3,12 +3,12 @@
 		"wp-scripts": "^0.0.1-security"
 	},
 	"name": "chocante-product-filters",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"main": "",
 	"scripts": {
 		"start": "wp-scripts start",
 		"build": "NODE_ENV=production wp-scripts build",
-		"make": "npm run build && zip -r chocante-product-filters.zip build includes languages chocante-product-filters.php",
+		"make": "npm run build && rm -f chocante-product-filters.zip && zip -r chocante-product-filters.zip build includes languages chocante-product-filters.php",
 		"translate": "wp i18n make-pot . languages/chocante-product-filters.pot --domain=chocante-product-filters --exclude=node_modules,build"
 	},
 	"author": "",

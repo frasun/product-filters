@@ -1,4 +1,7 @@
 class ChocanteProductFilters {
+	static PRODUCT_FILTERS = 'chocante-product-filters';
+	static SHOP_LOOP = '#shop'
+
 	constructor(formElement) {
 		this.form = formElement;
 
@@ -12,6 +15,9 @@ class ChocanteProductFilters {
 		event.preventDefault();
 
 		const data = new FormData(event.target);
+
+		if(!Array.from(data.entries.length)) return;
+
 		const url = new URL(event.target.action);
 
 		for (let filter of data.keys()) {
@@ -22,58 +28,24 @@ class ChocanteProductFilters {
 			}
 		}
 
-		window.location.href = url;
+		this.reloadAndScroll(url);
 	}
 
 	resetFilters(event) {
 		const url = new URL(event.target.action);
-		url.searchParams.append('reset', 'true');
 
-		window.location.href = url;
+		this.reloadAndScroll(url);
+	}
+
+	reloadAndScroll(url) {
+		window.location.href = `${url}${ChocanteProductFilters.SHOP_LOOP}`;
 	}
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-	const filters = document.querySelectorAll(".chocante-product-filters");
+	const filters = document.getElementById(ChocanteProductFilters.PRODUCT_FILTERS);
 
-	if (Array.from(filters).length) {
-		// Init filters.
-		for (const filter of Array.from(filters)) {
-			new ChocanteProductFilters(filter);
-		}
-
-		// Scroll to filters.
-		const url = new URL(window.location.href);
-
-		if (url.searchParams.size > 0) {
-			window.requestAnimationFrame(() => {
-				let top = filters[0].getBoundingClientRect().top - 50;
-
-				if (window.ChocanteProductFiltersScrollTo) {
-					top =
-						typeof window.ChocanteProductFiltersScrollTo === "function"
-							? window.ChocanteProductFiltersScrollTo()
-							: window.ChocanteProductFiltersScrollTo;
-				}
-
-				window.scrollTo({
-					top,
-					behavior: "smooth",
-				});
-
-				if (
-					window.ChocanteProductFiltersAfterScroll &&
-					typeof window.ChocanteProductFiltersAfterScroll === "function"
-				) {
-					window.addEventListener(
-						"scrollend",
-						() => {
-							window.ChocanteProductFiltersAfterScroll();
-						},
-						{ once: true }
-					);
-				}
-			});
-		}
+	if(filters) {
+		new ChocanteProductFilters(filters);
 	}
 });

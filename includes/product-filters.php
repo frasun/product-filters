@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 $form_id = time();
 ?>
 
-<form class="chocante-product-filters" method="get" action="<?php echo esc_attr( strtok( get_pagenum_link(), '?' ) ); ?>">
+<form id="chocante-product-filters" method="get" action="<?php echo esc_attr( strtok( get_pagenum_link(), '?' ) ); ?>">
 	<header>
 		<?php esc_html_e( 'Filter products', 'chocante-product-filters' ); ?>
 		<?php do_action( 'chocante_product_filters_header' ); ?>
