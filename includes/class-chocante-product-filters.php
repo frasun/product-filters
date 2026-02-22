@@ -194,7 +194,7 @@ class Chocante_Product_Filters {
 
 		if ( isset( $tag_filter ) ) {
 			$tax_query[] = array(
-				'taxonomy' => 'product_tag',
+				'taxonomy' => self::PARAM_TAG,
 				'field'    => 'slug',
 				'terms'    => $tag_filter,
 			);

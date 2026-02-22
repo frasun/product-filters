@@ -20,7 +20,7 @@ $form_id = time();
 	<?php foreach ( $filters as $filter_name => $filter ) : ?>
 			<?php if ( isset( $filter['items'] ) ) : ?>
 				<?php if ( ! empty( $filter['items'] ) ) : ?>
-				<fieldset>
+				<fieldset data-filter=<?php echo esc_attr( $filter_name ); ?>>
 					<legend><?php echo esc_html( $filter['label'] ); ?></legend>
 					<?php
 					foreach ( $filter['items'] as $item ) {
@@ -38,7 +38,7 @@ $form_id = time();
 				</fieldset>
 				<?php endif; ?>
 			<?php else : ?>
-				<fieldset>
+				<fieldset data-filter=<?php echo esc_attr( $filter_name ); ?>>
 				<?php
 					$name     = $filter_name;
 					$value    = true;
