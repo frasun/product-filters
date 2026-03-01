@@ -37,7 +37,7 @@ class Chocante_Product_Filters {
 	 *
 	 * @var array WC Product Query params.
 	 */
-	private $query_params;
+	private $query_params = array();
 
 	/**
 	 * Queried taxonomy e.g. product category
@@ -213,7 +213,8 @@ class Chocante_Product_Filters {
 		$orderby = isset( $q->query_vars[ self::PARAM_ORDERBY ] ) ? $q->query_vars[ self::PARAM_ORDERBY ] : null;
 
 		if ( isset( $orderby ) && ! str_contains( $orderby, self::DEFAULT_ORDERBY ) ) {
-			$this->query_params[ self::PARAM_ORDERBY ] = $orderby;
+			// Handle 'date id' value.
+			$this->query_params[ self::PARAM_ORDERBY ] = explode( ' ', $orderby )[0];
 		}
 
 		// On Sale.
@@ -263,6 +264,7 @@ class Chocante_Product_Filters {
 		$query_params   = $this->query_params;
 		$excluded_terms = get_option( self::EXCLUDED_TERMS, array() );
 		$filters        = $this->data->get_filters( $this->query_params, $this->current_taxonomy, $excluded_terms );
+		$has_filters    = self::has_filters();
 
 		if ( ! empty( $filters ) ) {
 			$this->filters = $filters;
@@ -303,7 +305,12 @@ class Chocante_Product_Filters {
 	 * Whether any filter is set
 	 */
 	public function has_filters() {
-		return isset( $this->query_params ) && count( $this->query_params ) > 1;
+		$filters = $this->query_params;
+
+		unset( $filters[ self::PARAM_VISIBILITY ] );
+		unset( $filters[ self::PARAM_ORDERBY ] );
+
+		return count( $filters ) > 0;
 	}
 
 	/**
@@ -338,5 +345,26 @@ class Chocante_Product_Filters {
 			},
 			0
 		);
+	}
+
+	/**
+	 * Reset fitlers url
+	 */
+	public function get_reset_url() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$filter_params = array_keys(
+			array_filter(
+				$_GET,
+				function ( $key ) {
+					return strpos( $key, 'filter_' ) === 0;
+				},
+				ARRAY_FILTER_USE_KEY
+			)
+		);
+
+		$clean_url = remove_query_arg( $filter_params );
+		$reset_url = add_query_arg( 'reset_filters', true, $clean_url );
+
+		return $reset_url;
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Product Filters
  * Description: Filter product listings.
- * Version: 2.1.3
+ * Version: 2.1.4
  * Author: Chocante
  * Text Domain: chocante-product-filters
  * Domain Path: /languages

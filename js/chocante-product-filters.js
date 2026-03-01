@@ -1,6 +1,8 @@
 class ChocanteProductFilters {
-	static PRODUCT_FILTERS = 'chocante-product-filters';
-	static SHOP_LOOP = '#shop'
+	static PRODUCT_FILTERS = "chocante-product-filters";
+	static PARAM_FITLER = "filter_";
+	static PARAM_RESET = "reset_filters";
+	static SHOP_LOOP = "#shop";
 
 	constructor(formElement) {
 		this.form = formElement;
@@ -9,6 +11,8 @@ class ChocanteProductFilters {
 			this.form.addEventListener("submit", this.submitFilters.bind(this));
 			this.form.addEventListener("reset", this.resetFilters.bind(this));
 		}
+
+		this.scrollToFilters();
 	}
 
 	async submitFilters(event) {
@@ -16,7 +20,7 @@ class ChocanteProductFilters {
 
 		const data = new FormData(event.target);
 
-		if(!Array.from(data.entries.length)) return;
+		if (!Array.from(data.entries.length)) return;
 
 		const url = new URL(event.target.action);
 
@@ -28,24 +32,57 @@ class ChocanteProductFilters {
 			}
 		}
 
-		this.reloadAndScroll(url);
+		window.location.href = url;
 	}
 
 	resetFilters(event) {
 		const url = new URL(event.target.action);
+		const currentUrl = new URL(window.location.href);
 
-		this.reloadAndScroll(url);
+		currentUrl.searchParams.forEach((value, key) => {
+			if (!key.includes(ChocanteProductFilters.PARAM_FITLER)) {
+				url.searchParams.append(key, value);
+			}
+		});
+
+		url.searchParams.append(ChocanteProductFilters.PARAM_RESET, true);
+
+		window.location.href = url;
 	}
 
-	reloadAndScroll(url) {
-		window.location.href = `${url}${ChocanteProductFilters.SHOP_LOOP}`;
+	scrollToFilters() {
+		const url = new URL(window.location.href);
+
+		for (let filter of url.searchParams.keys()) {
+			const hasFilters = filter.includes(ChocanteProductFilters.PARAM_FITLER);
+			const hasReset = ChocanteProductFilters.PARAM_RESET === filter;
+
+			if (hasFilters || hasReset) {
+				const filters = document.querySelector(
+					ChocanteProductFilters.SHOP_LOOP,
+				);
+
+				if (filters) {
+					window.requestAnimationFrame(() => {
+						filters.scrollIntoView();
+
+						if(hasReset) {
+							url.searchParams.delete(ChocanteProductFilters.PARAM_RESET);
+							history.replaceState({}, '', url);
+						}
+					});
+				}
+			}
+		}
 	}
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-	const filters = document.getElementById(ChocanteProductFilters.PRODUCT_FILTERS);
+	const filters = document.getElementById(
+		ChocanteProductFilters.PRODUCT_FILTERS,
+	);
 
-	if(filters) {
+	if (filters) {
 		new ChocanteProductFilters(filters);
 	}
 });

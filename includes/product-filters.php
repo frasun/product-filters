@@ -15,7 +15,7 @@ $form_id = time();
 		<?php do_action( 'chocante_product_filters_header' ); ?>
 	</header>
 	<?php if ( isset( $query_params['orderby'] ) ) : ?>
-		<input type="hidden" name="orderby-<?php echo esc_html( $form_id ); ?>" value="<?php echo esc_attr( $query_params['orderby'] ); ?>" />
+		<input type="hidden" name="orderby" value="<?php echo esc_attr( $query_params['orderby'] ); ?>" />
 	<?php endif; ?>
 	<?php foreach ( $filters as $filter_name => $filter ) : ?>
 			<?php if ( isset( $filter['items'] ) ) : ?>
@@ -56,7 +56,7 @@ $form_id = time();
 		<button type="submit" class="button">
 			<?php esc_html_e( 'Filter', 'chocante-product-filters' ); ?>
 		</button>
-		<?php if ( isset( $query_params ) && count( $query_params ) > 1 ) : ?>
+		<?php if ( $has_filters ) : ?>
 			<button type="reset" class="button">
 				<?php esc_html_e( 'Reset filters', 'chocante-product-filters' ); ?>
 			</button>
