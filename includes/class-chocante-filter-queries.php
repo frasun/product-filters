@@ -139,7 +139,7 @@ class Chocante_Filter_Queries {
 		$query = '';
 
 		foreach ( $taxonomies as $filter_name => $taxonomy_ids ) {
-			if ( ! is_array( $taxonomy_ids ) ) {
+			if ( ! is_array( $taxonomy_ids ) || empty( $taxonomy_ids ) ) {
 				continue;
 			}
 
@@ -421,7 +421,7 @@ class Chocante_Filter_Queries {
 	 * Clear wp cache on product save
 	 */
 	public function clear_cache() {
-		if ( ! wp_cache_supports( self::CACHE_GROUP ) ) {
+		if ( wp_cache_supports( 'flush_group' ) ) {
 			wp_cache_flush_group( self::CACHE_GROUP );
 		} else {
 			wp_cache_flush();

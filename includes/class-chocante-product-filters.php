@@ -235,7 +235,7 @@ class Chocante_Product_Filters {
 					foreach ( $taxonomy['terms'] as $taxonomy_term ) {
 						$term = get_term_by( $taxonomy['field'], $taxonomy_term, $taxonomy['taxonomy'] );
 
-						if ( is_wp_error( $term ) || null === $term ) {
+						if ( is_wp_error( $term ) || false === $term ) {
 							continue;
 						}
 
