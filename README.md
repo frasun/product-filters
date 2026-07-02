@@ -16,7 +16,7 @@ making them compatible with full-page caching (no AJAX required to display).
 - Admin UI to exclude specific taxonomies or individual terms from filters
 - Filter results cached per active combination via `wp_cache`, flushed on product changes
 - WPML-aware — cache keys include current language
-- Available as `[chocante_product_filters]` shortcode
+- Available as a shortcode
 
 ## Scripts
 
