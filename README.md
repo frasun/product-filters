@@ -11,7 +11,6 @@ making them compatible with full-page caching (no AJAX required to display).
 - Multi-select within a taxonomy uses OR logic by default
 - Category filter works on top-level shop page (native WooCommerce limitation bypass)
 - Filter state reflected in URL (`filter_*` params) — shareable and cacheable
-- Excludes hidden products via `product_visibility` taxonomy
 - On taxonomy pages, shows only child terms of the current category
 - Admin UI to exclude specific taxonomies or individual terms from filters
 - Filter results cached per active combination via `wp_cache`, flushed on product changes
