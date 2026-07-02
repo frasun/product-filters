@@ -21,8 +21,8 @@ making them compatible with full-page caching (no AJAX required to display).
 ## Scripts
 
 ```bash
-npm start      # development build (watch)
-npm run build  # production build
-npm run make   # build + package as chocante-product-filters.zip
+npm start          # development build (watch)
+npm run build      # production build
+npm run make       # build + package as chocante-product-filters.zip
 npm run translate  # generate .pot translation file
 ```
